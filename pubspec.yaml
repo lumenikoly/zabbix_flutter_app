@@ -1,5 +1,5 @@
 name: zabbix_flutter_app
-description: A new Flutter project.
+description: Flutter app for Zabbix
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,6 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+
 version: 1.0.0+1
 
 environment:
@@ -23,15 +24,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  http: ^0.13.3
+  flutter_riverpod: ^0.14.0+3
+  flutter_secure_storage: ^4.2.0
   cupertino_icons: ^1.0.2
+  charts_flutter: ^0.10.0
+  shared_preferences: ^2.0.5
+  flutter_login: ^1.1.0
+  bitsdojo_window: ^0.1.0+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

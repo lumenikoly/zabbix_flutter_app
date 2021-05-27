@@ -1,10 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zabbix_flutter_app/service/router_generator.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/material.dart';
+import 'package:zabbix_flutter_app/utils/router_generator.dart';
+import 'features/presentation/page/login_page.dart';
+import 'injection_container.dart' as di;
 
-void main() {
-  runApp(ProviderScope(child: ZabbixApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
+  runApp(App());
   doWhenWindowReady(() {
     final win = appWindow;
     final initialSize = Size(600, 500);
@@ -16,12 +19,12 @@ void main() {
   });
 }
 
-class ZabbixApp extends ConsumerWidget {
+class App extends StatelessWidget {
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/',
       title: 'Flutterix',
+      home: LoginPage(),
       onGenerateRoute: RouteGenerator.generateRoute,
       theme: ThemeData(),
       darkTheme: ThemeData.dark(),

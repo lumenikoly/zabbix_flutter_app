@@ -1,16 +1,57 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zabbix_flutter_app/features/presentation/bloc/login_page_bloc/login_page_bloc.dart';
 import 'package:zabbix_flutter_app/utils/colors_const.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginPageControls extends StatefulWidget {
+  const LoginPageControls({
+    Key key,
+  }) : super(key: key);
+
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
+  _LoginPageControls createState() => _LoginPageControls();
+}
+
+class _LoginPageControls extends State<LoginPageControls> {
+  final controller = TextEditingController();
+  final RegExp _regExp = RegExp(
+      "^((http|https):\/\/)?(www\.)?([A-Za-zА-Яа-я0-9]{1}[A-Za-zА-Яа-я0-9\-]*\.?)*\.{1}[A-Za-zА-Яа-я0-9-]{2,8}(\/([\w#!:.?+=&%@!\-\/])*)?");
+  RegExp _fieldRegex = RegExp("[A-Za-zА-Яа-я0-30-]+");
+  String pass;
+  String user;
+  String zabbix;
+
+  var _numberForm = GlobalKey<FormState>();
+
+  bool isValidForm = false;
+
+  @override
+  Widget build(BuildContext context) {
     TextStyle style = TextStyle(fontSize: 20.0, color: Colors.black87);
     TextStyle hintStyle = TextStyle(color: Colors.black26);
     TextStyle titleStyle = TextStyle(
         fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold);
 
-    final zabbixURLField = TextField(
+    final _urlValidator = MultiValidator([
+      RequiredValidator(errorText: 'Введите адрес!'),
+      MaxLengthValidator(30, errorText: 'Введите коректный адрес!'),
+      PatternValidator(_regExp, errorText: 'Введите коректный адрес!')
+    ]);
+
+    final zabbixURLField = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (inputValue) {
+        if (inputValue.isEmpty || !_regExp.hasMatch(inputValue)) {
+          isValidForm = false;
+          return "Введите адрес";
+        }
+        isValidForm = true;
+        return null;
+      },
+      onChanged: (val) {
+        zabbix = val;
+      },
       style: style,
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
@@ -32,7 +73,19 @@ class LoginScreen extends ConsumerWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
     );
 
-    final userField = TextField(
+    final userField = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (inputValue) {
+        if (inputValue.isEmpty || !_regExp.hasMatch(inputValue)) {
+          isValidForm = false;
+          return "Введите логин";
+        }
+        isValidForm = true;
+        return null;
+      },
+      onChanged: (val) {
+        user = val;
+      },
       style: style,
       decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
@@ -54,7 +107,19 @@ class LoginScreen extends ConsumerWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
     );
 
-    final passwordField = TextField(
+    final passwordField = TextFormField(
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: (inputValue) {
+        if (inputValue.isEmpty || !_regExp.hasMatch(inputValue)) {
+          isValidForm = false;
+          return "Введите пароль";
+        }
+        isValidForm = true;
+        return null;
+      },
+      onChanged: (val) {
+        pass = val;
+      },
       style: style,
       obscureText: true,
       decoration: InputDecoration(
@@ -77,6 +142,18 @@ class LoginScreen extends ConsumerWidget {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))),
     );
 
+    void dispatchConcrete() {
+      if (isValidForm) {
+        BlocProvider.of<LoginPageBloc>(context)
+            .add(GetAuthKeyEvent(zabbix, user, pass));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text("Введите данные!"),
+          backgroundColor: ColorsConst.DEEP_COLOR,
+        ));
+      }
+    }
+
     final loginButon = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -84,7 +161,9 @@ class LoginScreen extends ConsumerWidget {
       child: MaterialButton(
         minWidth: 250,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {},
+        onPressed: () {
+          dispatchConcrete();
+        },
         child: Text("Подключиться",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -107,22 +186,24 @@ class LoginScreen extends ConsumerWidget {
             width: 400,
             padding: const EdgeInsets.fromLTRB(36, 5, 36, 5),
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Flutterix", style: titleStyle),
-                  SizedBox(height: 25.0),
-                  zabbixURLField,
-                  SizedBox(height: 25.0),
-                  userField,
-                  SizedBox(height: 25.0),
-                  passwordField,
-                  SizedBox(
-                    height: 35.0,
-                  ),
-                  loginButon,
-                ],
+              child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Flutterix", style: titleStyle),
+                    SizedBox(height: 25.0),
+                    zabbixURLField,
+                    SizedBox(height: 25.0),
+                    userField,
+                    SizedBox(height: 25.0),
+                    passwordField,
+                    SizedBox(
+                      height: 35.0,
+                    ),
+                    loginButon,
+                  ],
+                ),
               ),
             ),
           ),

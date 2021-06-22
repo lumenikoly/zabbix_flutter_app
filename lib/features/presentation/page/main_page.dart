@@ -21,8 +21,6 @@ class _LoginPageControls extends State<LoginPageControls> {
     TextStyle titleStyle = TextStyle(
         fontSize: 36, color: Colors.white, fontWeight: FontWeight.bold);
 
-    return Scaffold(
-      appBar: ,
-      body: Text(""));
+    return Scaffold(body: Text(""));
   }
 }

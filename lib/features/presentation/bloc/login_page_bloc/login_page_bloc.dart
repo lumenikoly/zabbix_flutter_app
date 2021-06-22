@@ -29,8 +29,6 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
     LoginPageEvent event,
   ) async* {
     if (event is GetAuthKeyEvent) {
-      print(event.user.getName());
-
       yield LoadingLoginPage();
       final failureOrKey = await _getAuthKey(Params(event.user));
       yield* _eitherLoadedOrErrorState(failureOrKey);
@@ -38,9 +36,9 @@ class LoginPageBloc extends Bloc<LoginPageEvent, LoginPageState> {
   }
 
   Stream<LoginPageState> _eitherLoadedOrErrorState(
-    Either<Failure, String> failureOrAllPetsList,
+    Either<Failure, String> failureOrData,
   ) async* {
-    yield failureOrAllPetsList.fold(
+    yield failureOrData.fold(
       (failure) => ErrorLoginPage(message: _mapFailureToMessage(failure)),
       (user) => LoadedLoginPage(),
     );

@@ -21,7 +21,6 @@ class LoginPage extends StatelessWidget {
     return BlocProvider(
         create: (_) => sl<LoginPageBloc>(),
         child: BlocBuilder<LoginPageBloc, LoginPageState>(
-          // ignore: missing_return
           builder: (context, state) {
             if (state is EmptyLoginPage) {
               return LoginPageControls();
@@ -40,7 +39,7 @@ class LoginPage extends StatelessWidget {
   _onErrorAlert(context) {
     Alert(
       context: context,
-      title: "Ошибка",
+      title: "Ошибка!",
       desc: "Не удалось подключиться к серверу!",
       buttons: [
         DialogButton(

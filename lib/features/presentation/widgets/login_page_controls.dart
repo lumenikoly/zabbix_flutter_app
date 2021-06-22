@@ -1,3 +1,4 @@
+import 'package:progress_indicators/progress_indicators.dart';
 import 'package:zabbix_flutter_app/features/presentation/bloc/login_page_bloc/login_page_bloc.dart';
 import 'package:zabbix_flutter_app/utils/colors_const.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +77,7 @@ class _LoginPageControls extends State<LoginPageControls> {
     final userField = TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (inputValue) {
-        if (inputValue.isEmpty || !_regExp.hasMatch(inputValue)) {
+        if (inputValue.isEmpty || !_fieldRegex.hasMatch(inputValue)) {
           isValidForm = false;
           return "Введите логин";
         }
@@ -110,7 +111,7 @@ class _LoginPageControls extends State<LoginPageControls> {
     final passwordField = TextFormField(
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (inputValue) {
-        if (inputValue.isEmpty || !_regExp.hasMatch(inputValue)) {
+        if (inputValue.isEmpty || !_fieldRegex.hasMatch(inputValue)) {
           isValidForm = false;
           return "Введите пароль";
         }
@@ -149,7 +150,7 @@ class _LoginPageControls extends State<LoginPageControls> {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Введите данные!"),
-          backgroundColor: ColorsConst.DEEP_COLOR,
+          backgroundColor: Colors.redAccent.shade200,
         ));
       }
     }
